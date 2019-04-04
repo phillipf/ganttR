@@ -1,0 +1,7 @@
+# (uncomment to add a dependency)
+ dependencies:
+  - name: gantR
+    version: 6.1.2
+    src: htmlwidgets/lib/gantt
+    script: dhtmlxgantt.js
+    stylesheet: dhtmlxgantt.css

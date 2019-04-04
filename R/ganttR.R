@@ -8,14 +8,15 @@
 ganttR <- function(message, width = NULL, height = NULL, elementId = NULL) {
 
   # forward options using x
-  x = list(
-    message = message
-  )
+  #x = list(
+  #  message = message
+  #)
 
   # create widget
   htmlwidgets::createWidget(
     name = 'ganttR',
-    x,
+    #x,
+    "gantt_here",
     width = width,
     height = height,
     package = 'ganttR',

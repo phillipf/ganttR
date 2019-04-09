@@ -5,18 +5,24 @@
 #' @import htmlwidgets
 #'
 #' @export
-ganttR <- function(message, width = NULL, height = NULL, elementId = NULL) {
+ganttR <- function(json, width = NULL, height = NULL, elementId = NULL) {
 
   # forward options using x
   #x = list(
   #  message = message
   #)
 
+  #data <- paste(readLines(json), collapse="\n")
+
+  x <- list(
+    data = data
+  )
+
   # create widget
   htmlwidgets::createWidget(
     name = 'ganttR',
-    #x,
-    "gantt_here",
+    x,
+    #"gantt_here",
     width = width,
     height = height,
     package = 'ganttR',
@@ -50,4 +56,31 @@ ganttROutput <- function(outputId, width = '100%', height = '400px'){
 renderGanttR <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) { expr <- substitute(expr) } # force quoted
   htmlwidgets::shinyRenderWidget(expr, ganttROutput, env, quoted = TRUE)
+}
+
+#' @export
+callJS <- function() {
+  message <- Filter(function(x) !is.symbol(x), as.list(parent.frame(1)))
+  session <- shiny::getDefaultReactiveDomain()
+  method <- paste0("ganttR:", message$method)
+  session$sendCustomMessage(method, message)
+}
+
+#' @export
+addTask <- function(id, initiative) {
+  message <- list(id = id, initiative = initiative)
+  # if (!missing(options)) {
+  #   message['options'] <- options
+  # }
+  session <- shiny::getDefaultReactiveDomain()
+  session$sendCustomMessage("ganttR:addTask", message)
+}
+
+.onLoad <- function(libname, pkgname) {
+  # register a handler to decode the timeline data passed from JS to R
+  # because the default way of decoding it in shiny flattens a data.frame
+  # to a vector
+  shiny::registerInputHandler("ganttRDF", function(data, ...) {
+    jsonlite::fromJSON(jsonlite::toJSON(data, auto_unbox = TRUE))
+  }, force = TRUE)
 }

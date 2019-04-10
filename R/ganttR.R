@@ -67,8 +67,8 @@ callJS <- function() {
 }
 
 #' @export
-addTask <- function(id, initiative) {
-  message <- list(id = id, initiative = initiative)
+addTask <- function(id, description, criticalStep, start, duration) {
+  message <- list(id = id, description = description, criticalStep = criticalStep, start = start, duration = duration)
   # if (!missing(options)) {
   #   message['options'] <- options
   # }

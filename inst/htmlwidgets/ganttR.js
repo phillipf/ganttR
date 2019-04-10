@@ -8,7 +8,11 @@ HTMLWidgets.widget({
 
     var initialized = false;
     var elementId = el.id;
+    var customForm = document.createElement('div');
+    /*var myHTML = '<div id="my-form"> <label for="description">Task text <input type="text" name="description" value="" > </label> <br> <input type="button" name="save" value="Save"> <input type="button" name="close" value="Close"> <input type="button" name="delete" value="Delete"> </div>';
 
+    customForm.innerHTML = myHTML;
+    var form = document.getElementById(customForm.id);*/
     // TODO: define shared variables for this instance
 
     return {
@@ -21,73 +25,104 @@ HTMLWidgets.widget({
        if (!initialized) {
           initialized = true;
 
-          /*gantt.form_blocks["my_editor"] = {
-              render:function(sns) {
-                  return "<div class='dhx_cal_ltext' style='height:60px;'>Text&nbsp;"
-                  +"<input type='text'><br/>Holders&nbsp;<input type='text'></div>";
-              },
-              set_value:function(node, value, task,section) {
-                  node.childNodes[1].value = value || "";
-                  node.childNodes[4].value = task.users || "";
-              },
-              get_value:function(node, task,section) {
-                  task.users = node.childNodes[4].value;
-                  return node.childNodes[1].value;
-              },
-              focus:function(node) {
-                  var a = node.childNodes[1];
-                  a.select();
-                  a.focus();
+
+          var taskId = null;
+
+          //var htmlObject = temp.firstChild;
+
+          /*gantt.showLightbox = function(id) {
+              taskId = id;
+              var task = gantt.getTask(id);
+
+              //var form = document.getElementById("my-form");
+              //var form = document.getForm(myHTML);
+              var input = form.querySelector("[name='description']");
+              input.focus();
+              input.value = task.text;
+
+              form.style.display = "block";
+
+              function save() {
+                  var task = gantt.getTask(taskId);
+
+                  task.text = form.querySelector("[name='description']").value;
+
+                  if(task.$new){
+                      gantt.addTask(task,task.parent);
+                  }else{
+                      gantt.updateTask(task.id);
+                  }
+
+                  gantt.hideLightbox();
               }
+
+              function cancel() {
+                  var task = gantt.getTask(taskId);
+
+                  if(task.$new)
+                  gantt.deleteTask(task.id);
+                  gantt.hideLightbox();
+              }
+
+              function remove() {
+                  gantt.deleteTask(taskId);
+                  gantt.hideLightbox();
+              }
+
+              form.querySelector("[name='save']").onclick = save;
+              form.querySelector("[name='close']").onclick = cancel;
+              form.querySelector("[name='delete']").onclick = remove;
           };
 
-          gantt.config.lightbox.sections = [
-          { name:"description", height:200, map_to:"text", type:"my_editor", focus:true},
-          {name:"parent", type:"parent", allow_root:"true", root_label:"No parent"},
-          { name:"time", height:72, type:"duration", map_to:"auto"}
-          ];
-          gantt.locale.labels["section_parent"] = "Parent task";*/
+          gantt.hideLightbox = function(){
+              form.style.display = "";
+              taskId = null;
+          };*/
 
           	var tasks = {
           		data: [
           			{
-          				id: 1, text: "The Climate Initiative",    start_date: "01-01-2019", duration: 18, order: 10,
+          				id: 1, text: "#StopAdani",    start_date: "01-01-2019", duration: 18, order: 10,
           				progress: 0.4, open: true
           			},
           			{
-          				id: 2, text: "States lead", start_date: "02-04-2018", duration: 8, order: 10,
-          				progress: 0.6, parent: 1
+          				id: 2, text: "Repower Australia", start_date: "02-04-2018", duration: 8, order: 10,
+          				progress: 0.6, open: true
           			},
           			{
-          				id: 3, text: "Beyond coal & gas builds", start_date: "11-04-2018", duration: 8, order: 20,
-          				progress: 0.6, parent: 1
+          				id: 3, text: "Laws that protect life", start_date: "11-04-2018", duration: 8, order: 20,
+          				progress: 0.6, open: true
           			},
           			{
-          				id: 4, text: "Federal ALP commits", start_date: "11-04-2018", duration: 8, order: 20,
-          				progress: 0.6, parent: 1
+          				id: 4, text: "Be nuclear free", start_date: "11-04-2018", duration: 8, order: 20,
+          				progress: 0.6, open: true
           			},
           			{
-          				id: 5, text: "Climate an election issue", start_date: "11-04-2018", duration: 8, order: 20,
-          				progress: 0.6, parent: 1
+          				id: 5, text: "A million conversations", start_date: "11-04-2018", duration: 8, order: 20,
+          				progress: 0.6, open: true
           			},
           			{
-          				id: 6, text: "Mines abandoned", start_date: "11-04-2018", duration: 8, order: 20,
-          				progress: 0.6, parent: 1
+          				id: 6, text: "Strong Democracy", start_date: "11-04-2018", duration: 8, order: 20,
+          				progress: 0.6, open: true
           			},
           			{
-          				id: 7, text: "Climate contest", start_date: "11-04-2018", duration: 8, order: 20,
-          				progress: 0.6, parent: 1
+          				id: 7, text: "Economy for Life", start_date: "11-04-2018", duration: 8, order: 20,
+          				progress: 0.6, open: true
+          			},
+          			{
+          				id: 8, text: "Protected Areas", start_date: "11-04-2018", duration: 8, order: 20,
+          				progress: 0.6, open: true
           			}
   		      ]};
 
   	    gantt.init(el);
-
 
   	    gantt.parse(tasks);
 
   	    if (HTMLWidgets.shinyMode) {
 
           var data = JSON.stringify(gantt.serialize());
+
 
   	      gantt.attachEvent("onAfterTaskUpdate", function(id, item) {
 
@@ -98,7 +133,11 @@ HTMLWidgets.widget({
               );
           });
 
-          gantt.attachEvent("onAfterTaskAdd", function(id,item){
+          gantt.attachEvent("onAfterTaskAdd", function(id, item){
+
+              /*Shiny.onInputChange(
+                elementId + "_data", JSON.stringify(gantt.serialize())
+              );*/
 
               Shiny.onInputChange(
                 elementId + "_data", JSON.stringify(gantt.serialize())
@@ -106,6 +145,16 @@ HTMLWidgets.widget({
 
           });
 
+          gantt.attachEvent("onTaskSelected", function(id){
+              Shiny.onInputChange(
+                elementId + "_selected", id
+              );
+          });
+
+          Shiny.onInputChange(
+              elementId + "_selected",
+              gantt.getSelectedId()
+          );
 
 
           Shiny.onInputChange(
@@ -170,9 +219,9 @@ if (HTMLWidgets.shinyMode) {
     var el = document.getElementById(message.id);
     if (el) {
       el.gantt.addTask(
-        {text: message.initiative,
-        start_date:"11-04-2018",
-        duration:28});
+        {text: message.description,
+        start_date: message.start,
+        duration: message.duration});
     }
   });
 }

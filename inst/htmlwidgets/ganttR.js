@@ -22,99 +22,36 @@ HTMLWidgets.widget({
         // TODO: code to render the widget, e.g.
         //el.innerText = x.message;
 
+       //var tasks = HTMLWidgets.dataframeToD3(x.data);
+       var tasks = x;
        if (!initialized) {
           initialized = true;
 
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
 
-          var taskId = null;
+        today = yyyy + '-' + mm + '-' + dd + ' 00:00:00';
 
-          //var htmlObject = temp.firstChild;
+        /*var tasks = {
+          data:[
+             {id:1, text:"#StopAdani", type:gantt.config.types.project, open:true},
+             //{id:8, text:"strategy", start_date: today, duration:8, progress: 0.4, parent: 1},
+             {id:2, text:"Repower Australia", type:gantt.config.types.project, open:true},
+             {id:3, text:"Laws that protect life", type:gantt.config.types.project, open:true},
+             {id:4, text:"Be nuclear free", type:gantt.config.types.project, open:true},
+             {id:5, text:"Strong Democracy", type:gantt.config.types.project, open:true},
+             {id:6, text:"Economy for Life", type:gantt.config.types.project, open:true},
+             {id:7, text:"Protected Areas", type:gantt.config.types.project, open:true}
+           ]
+        };*/
+        var taskId = null;
 
-          /*gantt.showLightbox = function(id) {
-              taskId = id;
-              var task = gantt.getTask(id);
 
-              //var form = document.getElementById("my-form");
-              //var form = document.getForm(myHTML);
-              var input = form.querySelector("[name='description']");
-              input.focus();
-              input.value = task.text;
-
-              form.style.display = "block";
-
-              function save() {
-                  var task = gantt.getTask(taskId);
-
-                  task.text = form.querySelector("[name='description']").value;
-
-                  if(task.$new){
-                      gantt.addTask(task,task.parent);
-                  }else{
-                      gantt.updateTask(task.id);
-                  }
-
-                  gantt.hideLightbox();
-              }
-
-              function cancel() {
-                  var task = gantt.getTask(taskId);
-
-                  if(task.$new)
-                  gantt.deleteTask(task.id);
-                  gantt.hideLightbox();
-              }
-
-              function remove() {
-                  gantt.deleteTask(taskId);
-                  gantt.hideLightbox();
-              }
-
-              form.querySelector("[name='save']").onclick = save;
-              form.querySelector("[name='close']").onclick = cancel;
-              form.querySelector("[name='delete']").onclick = remove;
-          };
-
-          gantt.hideLightbox = function(){
-              form.style.display = "";
-              taskId = null;
-          };*/
-
-          	var tasks = {
-          		data: [
-          			{
-          				id: 1, text: "#StopAdani",    start_date: "01-01-2019", duration: 18, order: 10,
-          				progress: 0.4, open: true
-          			},
-          			{
-          				id: 2, text: "Repower Australia", start_date: "02-04-2018", duration: 8, order: 10,
-          				progress: 0.6, open: true
-          			},
-          			{
-          				id: 3, text: "Laws that protect life", start_date: "11-04-2018", duration: 8, order: 20,
-          				progress: 0.6, open: true
-          			},
-          			{
-          				id: 4, text: "Be nuclear free", start_date: "11-04-2018", duration: 8, order: 20,
-          				progress: 0.6, open: true
-          			},
-          			{
-          				id: 5, text: "A million conversations", start_date: "11-04-2018", duration: 8, order: 20,
-          				progress: 0.6, open: true
-          			},
-          			{
-          				id: 6, text: "Strong Democracy", start_date: "11-04-2018", duration: 8, order: 20,
-          				progress: 0.6, open: true
-          			},
-          			{
-          				id: 7, text: "Economy for Life", start_date: "11-04-2018", duration: 8, order: 20,
-          				progress: 0.6, open: true
-          			},
-          			{
-          				id: 8, text: "Protected Areas", start_date: "11-04-2018", duration: 8, order: 20,
-          				progress: 0.6, open: true
-          			}
-  		      ]};
-
+        //gantt.config.fit_tasks = true;
+        //gantt.config.autosize = "true";
+        gantt.config.xml_date = "%Y-%m-%d %H:%i:%s";
   	    gantt.init(el);
 
   	    gantt.parse(tasks);
@@ -123,6 +60,14 @@ HTMLWidgets.widget({
 
           var data = JSON.stringify(gantt.serialize());
 
+          /*gantt.attachEvent("onBeforeTaskAdd", function(id,item){
+
+              if(item.parent) {
+
+              }
+
+              return true;
+          });*/
 
   	      gantt.attachEvent("onAfterTaskUpdate", function(id, item) {
 
@@ -188,7 +133,12 @@ HTMLWidgets.widget({
         {text: "stop adani",
         start_date:"11-04-2018",
         duration:28});
-      }
+      }/*,
+
+      loadScenario : function(params) {
+        gantt.clearAll();
+        gantt.parse(params);
+      }*/
 
     };
   }
@@ -222,6 +172,18 @@ if (HTMLWidgets.shinyMode) {
         {text: message.description,
         start_date: message.start,
         duration: message.duration});
+    }
+  });
+
+
+}
+
+if (HTMLWidgets.shinyMode) {
+    Shiny.addCustomMessageHandler("ganttR:loadScenario", function(message) {
+    var el = document.getElementById(message.id);
+    if (el) {
+      el.gantt.clearAll();
+      el.gantt.parse(message.data);
     }
   });
 }

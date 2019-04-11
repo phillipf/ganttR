@@ -5,7 +5,7 @@
 #' @import htmlwidgets
 #'
 #' @export
-ganttR <- function(json, width = NULL, height = NULL, elementId = NULL) {
+ganttR <- function(data, width = NULL, height = NULL, elementId = NULL) {
 
   # forward options using x
   #x = list(
@@ -13,9 +13,9 @@ ganttR <- function(json, width = NULL, height = NULL, elementId = NULL) {
   #)
 
   #data <- paste(readLines(json), collapse="\n")
-
+  #items <- dataframeToD3(data)
   x <- list(
-    data = data
+    data = jsonlite::toJSON(data)
   )
 
   # create widget
@@ -74,6 +74,16 @@ addTask <- function(id, description, criticalStep, start, duration) {
   # }
   session <- shiny::getDefaultReactiveDomain()
   session$sendCustomMessage("ganttR:addTask", message)
+}
+
+#' @export
+loadScenario <- function(id, data) {
+  message <- list(id = id, data = list(data = jsonlite::toJSON(data)))
+  # if (!missing(options)) {
+  #   message['options'] <- options
+  # }
+  session <- shiny::getDefaultReactiveDomain()
+  session$sendCustomMessage("ganttR:loadScenario", message)
 }
 
 .onLoad <- function(libname, pkgname) {

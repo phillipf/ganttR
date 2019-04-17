@@ -94,7 +94,64 @@ HTMLWidgets.widget({
               Shiny.onInputChange(
                 elementId + "_selected", id
               );
+
+              //var parentid = gannt.getParent(id);
+              //var type = gantt.getTask(id).type == "task";
+              //var type = gantt.getTask(id).type == gantt.config.types.task;
+              //var type = gantt.getTask(id).start_date;
+              //var type = gantt.getTask(id).type === null;
+              //var type = gantt.getTaskType(gantt.getTask(id));
+              //gantt.getTask(id).type = "project";
+
+              /*Shiny.onInputChange(
+                elementId + "_type", type
+              );*/
           });
+
+
+          /*gantt.attachEvent("onTaskCreated", function(task){
+            //any custom logic here
+            var parentid = gannt.getParent(task.id);
+
+            if(parentid !== gantt.config.root_id) {
+              gantt.getTask(parentid).start_date = null;
+              //gantt.getTask(parentid).end_date = null;
+              gantt.updateTask(parentid);
+            }
+            return true;
+          });*/
+
+          /*gantt.attachEvent("onLightboxSave", function(id, task, is_new){
+            //any custom logic here
+
+            if(is_new) {
+
+              var parentid = gannt.getParent(task.id);
+
+              //if(parentid !== 0) {
+              gantt.getTask(parentid).start_date = null;
+              gantt.getTask(parentid).end_date = null;
+              gantt.updateTask(parentid);
+              //}
+
+            }
+
+            return true;
+          });*/
+
+          /*gantt.attachEvent("onAfterTaskAdd", function(id,item){
+
+              var parentid = gannt.getParent(id);
+
+              if(parentid > 0) {
+                gantt.getTask(parentid).start_date = null;
+                gantt.getTask(parentid).end_date = null;
+                gantt.updateTask(parentid);
+              }
+              /*gantt.getTask(parentid).type = "project"; //changes task's data
+              gantt.updateTask(parentid); //renders the updated task
+
+          });*/
 
           Shiny.onInputChange(
               elementId + "_selected",

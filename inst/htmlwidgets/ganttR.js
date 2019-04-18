@@ -48,10 +48,24 @@ HTMLWidgets.widget({
         };*/
         var taskId = null;
 
+        gantt.config.fit_tasks = true;
+
+        gantt.config.columns = [
+          {name:"text",       label:"Campaign",  width:"*", tree:true },
+          {name:"start_date", label:"Start time", align:"center" },
+          {name:"duration",   label:"Duration",   align:"center" },
+          {name:"add",        label:"",           width:44 }
+        ];
+
+        gantt.config.order_branch = true;
 
         //gantt.config.fit_tasks = true;
         //gantt.config.autosize = "true";
         gantt.config.xml_date = "%Y-%m-%d %H:%i:%s";
+
+        gantt.config.scale_unit = "month";
+        gantt.config.date_scale = "%F, %Y";
+
   	    gantt.init(el);
 
   	    gantt.parse(tasks);
@@ -89,6 +103,21 @@ HTMLWidgets.widget({
               );
 
           });
+
+          gantt.attachEvent("onRowDragEnd", function(id, target) {
+              drag_id = null;
+              Shiny.onInputChange(
+                elementId + "_data", JSON.stringify(gantt.serialize())
+              );
+              gantt.render();
+          });
+
+          /*gantt.attachEvent("onTaskDrag", function(id, mode, task, original){
+
+              Shiny.onInputChange(
+                elementId + "_data", JSON.stringify(gantt.serialize())
+              );
+          });*/
 
           gantt.attachEvent("onTaskSelected", function(id){
               Shiny.onInputChange(

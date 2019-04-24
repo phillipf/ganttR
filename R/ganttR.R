@@ -12,6 +12,8 @@ ganttR <- function(data, width = NULL, height = NULL, elementId = NULL) {
   #  message = message
   #)
 
+  data <- dataframeToD3(data)
+
   #data <- paste(readLines(json), collapse="\n")
   #items <- dataframeToD3(data)
   x <- list(
@@ -93,4 +95,15 @@ loadScenario <- function(id, data) {
   shiny::registerInputHandler("ganttRDF", function(data, ...) {
     jsonlite::fromJSON(jsonlite::toJSON(data, auto_unbox = TRUE))
   }, force = TRUE)
+}
+
+dataframeToD3 <- function(df) {
+  if (missing(df) || is.null(df)) {
+    return(list())
+  }
+  if (!is.data.frame(df)) {
+    stop("timevis: the input must be a dataframe", call. = FALSE)
+  }
+  row.names(df) <- NULL
+  apply(df, 1, function(row) as.list(row[!is.na(row)]))
 }

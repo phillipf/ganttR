@@ -12,7 +12,7 @@ ganttR <- function(data, width = NULL, height = NULL, elementId = NULL) {
   #  message = message
   #)
 
-  data <- dataframeToD3(data)
+  #data <- dataframeToD3(data)
 
   #data <- paste(readLines(json), collapse="\n")
   #items <- dataframeToD3(data)

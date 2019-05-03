@@ -25,7 +25,8 @@ HTMLWidgets.widget({
        //var tasks = HTMLWidgets.dataframeToD3(x.data);
        var tasks = x;
        if (!initialized) {
-          initialized = true;
+
+        initialized = true;
 
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
@@ -67,8 +68,6 @@ HTMLWidgets.widget({
         gantt.config.date_scale = "%F, %Y";
 
   	    gantt.init(el);
-
-  	    gantt.parse(tasks);
 
   	    if (HTMLWidgets.shinyMode) {
 
@@ -117,6 +116,45 @@ HTMLWidgets.widget({
 
           });
 
+          gantt.attachEvent("onLoadEnd", function(){
+              Shiny.onInputChange(
+                elementId + "_data", JSON.stringify(gantt.serialize())
+              );
+          });
+
+          gantt.attachEvent("onParse", function(){
+
+             Shiny.onInputChange(
+                elementId + "_data", JSON.stringify(gantt.serialize())
+              );
+
+          });
+
+          gantt.attachEvent("onGanttRender", function(){
+
+             Shiny.onInputChange(
+                elementId + "_data", JSON.stringify(gantt.serialize())
+              );
+
+          });
+
+          gantt.attachEvent("onDataRender", function(){
+              Shiny.onInputChange(
+                elementId + "_data", JSON.stringify(gantt.serialize())
+              );
+          });
+
+          gantt.attachEvent("onGanttReady", function(){
+              Shiny.onInputChange(
+                elementId + "_data", JSON.stringify(gantt.serialize())
+              );
+          });
+
+          gantt.attachEvent("onAfterTaskDelete", function(id,item){
+              Shiny.onInputChange(
+                elementId + "_deleted", id
+              );
+          });
 
           Shiny.onInputChange(
               elementId + "_selected",
@@ -126,10 +164,12 @@ HTMLWidgets.widget({
 
           Shiny.onInputChange(
               elementId + "_data",
-              data
+              JSON.stringify(gantt.serialize())
           );
 
   	    }
+
+  	    gantt.parse(tasks);
 
    }
 
